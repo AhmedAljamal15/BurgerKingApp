@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🍔 Burger King – Fast Food Ordering App
 
 <div align="center">
@@ -417,173 +416,7 @@ cartBloc.add(ClearCart());
 | Surface    | Dark Teal       | `#142F2A` |
 | Text       | White           | `#FFFFFF` |
 
-### Using Theme Colors
 
-```dart
-// Theme-aware approach (recommended)
-Container(
-  color: Theme.of(context).primaryColor,
-  child: Text(
-    'Hello',
-    style: Theme.of(context).textTheme.bodyLarge,
-  ),
-)
-
-// Direct color reference
-import 'package:fast_food/core/theme/app_colors.dart';
-
-Container(
-  color: AppColors.primary,
-)
-
-// Conditional theming
-final isDark = Theme.of(context).brightness == Brightness.dark;
-color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary
-```
-
-### Theme Management with Bloc
-
-```dart
-// Toggle theme
-context.read<ThemeBloc>().add(ToggleTheme());
-
-// Set specific theme
-context.read<ThemeBloc>().add(SetTheme(ThemeMode.dark));
-
-// Listen to theme changes
-BlocBuilder<ThemeBloc, ThemeState>(
-  builder: (context, state) {
-    return MaterialApp(
-      themeMode: state.themeMode,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-    );
-  },
-)
-```
-
----
-
-## 🔄 State Management
-
-### Bloc Pattern
-
-This app uses **flutter_bloc** for predictable state management:
-
-```dart
-// 1. Define Events
-abstract class CartEvent {}
-class AddToCart extends CartEvent {
-  final Product product;
-  AddToCart(this.product);
-}
-
-// 2. Define States
-abstract class CartState {}
-class CartLoading extends CartState {}
-class CartLoaded extends CartState {
-  final List<CartItem> items;
-  CartLoaded(this.items);
-}
-
-// 3. Implement Bloc
-class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc() : super(CartLoading()) {
-    on<AddToCart>(_onAddToCart);
-  }
-
-  void _onAddToCart(AddToCart event, Emitter<CartState> emit) {
-    // Business logic
-  }
-}
-
-// 4. Use in UI
-BlocBuilder<CartBloc, CartState>(
-  builder: (context, state) {
-    if (state is CartLoaded) {
-      return ListView.builder(
-        itemCount: state.items.length,
-        itemBuilder: (context, index) => CartItemWidget(state.items[index]),
-      );
-    }
-    return CircularProgressIndicator();
-  },
-)
-```
-
-### Hydrated Bloc (Persistence)
-
-```dart
-class CartBloc extends HydratedBloc<CartEvent, CartState> {
-  @override
-  CartState? fromJson(Map<String, dynamic> json) {
-    // Deserialize state
-    return CartLoaded.fromJson(json);
-  }
-
-  @override
-  Map<String, dynamic>? toJson(CartState state) {
-    // Serialize state
-    if (state is CartLoaded) {
-      return state.toJson();
-    }
-    return null;
-  }
-}
-```
-
----
-
-## 🌐 API Integration
-
-### Network Setup
-
-```dart
-// lib/core/network/api_client.dart
-class ApiClient {
-  final Dio _dio;
-
-  ApiClient() : _dio = Dio(BaseOptions(
-    baseUrl: ApiEndpoints.baseUrl,
-    connectTimeout: Duration(seconds: 30),
-    receiveTimeout: Duration(seconds: 30),
-  )) {
-    _dio.interceptors.add(LogInterceptor());
-    _dio.interceptors.add(AuthInterceptor());
-  }
-
-  Future<Response> get(String path) async {
-    return await _dio.get(path);
-  }
-
-  Future<Response> post(String path, dynamic data) async {
-    return await _dio.post(path, data: data);
-  }
-}
-```
-
-### Repository Pattern
-
-```dart
-class ProductRepository {
-  final ApiClient _apiClient;
-
-  ProductRepository(this._apiClient);
-
-  Future<List<Product>> getProducts() async {
-    try {
-      final response = await _apiClient.get(ApiEndpoints.products);
-      return (response.data as List)
-          .map((json) => Product.fromJson(json))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to load products: $e');
-    }
-  }
-}
-```
-
----
 
 ## 🧪 Testing
 
@@ -617,33 +450,6 @@ test/
     └── flows/
 ```
 
-### Example Test
-
-```dart
-void main() {
-  group('CartBloc', () {
-    late CartBloc cartBloc;
-
-    setUp(() {
-      cartBloc = CartBloc();
-    });
-
-    test('initial state is CartLoading', () {
-      expect(cartBloc.state, isA<CartLoading>());
-    });
-
-    blocTest<CartBloc, CartState>(
-      'emits CartLoaded when AddToCart is added',
-      build: () => cartBloc,
-      act: (bloc) => bloc.add(AddToCart(mockProduct)),
-      expect: () => [isA<CartLoaded>()],
-    );
-  });
-}
-```
-
----
-
 ## 🎯 Best Practices
 
 ### Code Style
@@ -668,27 +474,6 @@ void main() {
 - ✅ Ensure sufficient color contrast (WCAG AA)
 - ✅ Support screen readers
 - ✅ Test with TalkBack/VoiceOver
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Commit your changes**
-   ```bash
-   git commit -m 'Add amazing feature'
-   ```
-4. **Push to the branch**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. **Open a Pull Request**
 
 ### Contribution Guidelines
 
@@ -717,21 +502,6 @@ Additional documentation files:
 
 See [Issues](https://github.com/AhmedAljamal15/Burger_King/issues) for a complete list.
 
----
-
-## 🗺️ Roadmap
-
-- [ ] Push notifications for order updates
-- [ ] Social media authentication (Google, Facebook)
-- [ ] Loyalty points system
-- [ ] Multi-language support (i18n)
-- [ ] Voice ordering
-- [ ] AR menu preview
-- [ ] Apple Pay / Google Pay integration
-- [ ] Real-time order tracking map
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -756,21 +526,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support
-
-For support, please:
-
-- Open an [issue](https://github.com/AhmedAljamal15/Burger_King/issues)
-- Contact via GitHub discussions
-- Check existing documentation
-
----
 
 <div align="center">
 
-**Made with ❤️ using Flutter**
-
-⭐ Star this repo if you find it helpful!
 
 </div>
 =======
