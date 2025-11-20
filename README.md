@@ -1,16 +1,100 @@
-# fast_food
+# 🍔 Burger King – Fast Food Ordering App
 
-A new Flutter project.
+A modern **Flutter** fast food app inspired by Burger King’s experience.  
+It provides a smooth, visually appealing, and responsive ordering flow with support for dark/light themes, animations, and clean architecture.
 
-## Getting Started
+> ⚠️ Disclaimer: This app is a **non-official demo/learning project** and is **not affiliated** with Burger King Corporation.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 📚 Table of Contents
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Tech Stack](#-tech-stack)
+- [Project Structure](#-project-structure)
+- [Installation](#-installation)
+- [Configuration](#-configuration)
+- [Usage](#-usage)
+- [Theme System](#-theme-system)
+- [State Management](#-state-management)
+- [API Integration](#-api-integration)
+- [Testing](#-testing)
+- [Best Practices](#-best-practices)
+- [Contributing](#-contributing)
+- [Roadmap](#-roadmap)
+- [License & Support](#-license--support)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## 📝 Overview
+
+**Burger King App** is a Flutter-based fast food ordering application that focuses on:
+
+- Fast and intuitive **browsing** of meals and offers  
+- A smooth **shopping experience** with cart and checkout  
+- Aesthetic **glassmorphism UI** and animations  
+- A robust **Bloc-based architecture** that is scalable and maintainable  
+- Full support for **dark & light mode**
+
+This project is ideal as:
+
+- A portfolio piece for Flutter developers  
+- A base template for food ordering apps  
+- A playground to practice **Bloc, theming, and clean architecture**
+
+---
+
+## ✅ Features
+
+### 🔐 Authentication
+- Email/password login & signup (or mock auth)
+- Optional **guest mode** for quick access
+- Basic validation and error handling
+
+### 🏠 Home & Product Discovery
+- Featured products & offers
+- Categories (e.g. Burgers, Sides, Drinks, Desserts)
+- Search and filter support (if implemented)
+
+### 🛍️ Shopping Experience
+- Product details with:
+  - Image
+  - Name, description
+  - Price
+  - Add-ons / options (e.g. extra cheese, bigger size)
+- Optional **3D previews** or animations (placeholder section if not implemented yet)
+
+### 🛒 Cart Management
+- Add / remove items
+- Update quantities
+- Show subtotal, tax, and total
+- Clear cart
+
+### 💳 Checkout & Order Tracking
+- Order summary screen
+- Simple checkout flow (mock or real API)
+- Order status/tracking placeholder
+
+### 🎨 UI & Animations
+- **Glassmorphism** elements (blurred cards, overlay panels)
+- Smooth page transitions & micro animations
+- Animated icons (e.g., theme toggle, cart, favorites)
+## 🧱 Architecture
+
+The app follows a **Clean Architecture + Bloc pattern**, split into 3 main layers:
+
+1. **Presentation**
+   - Flutter UI (screens, widgets)
+   - Bloc/Cubit for state management
+
+2. **Domain**
+   - Business logic
+   - Entities and use cases
+
+3. **Data**
+   - Repositories implementations
+   - API / local data sources
+
+
