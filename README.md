@@ -17,14 +17,14 @@
 
 ## 🌟 screensshots 
 
-![Login](screensshots/login.png)
-![Signup](screensshots/signup.png)
-![Home](screensshots/home.png)
-![Search](screensshots/search.png)
-![Product](screensshots/product.png)
-![Product Pay](screensshots/product_pay.png)
-![Cart](screensshots/cart.png)
-![Profile](screensshots/profile.png)
+![Login](assets/ScreenShots/login.png)
+![Signup](assets/ScreenShots/signup.png)
+![Home](assets/ScreenShots/home.png)
+![Search](assets/ScreenShots/search.png)
+![Product](assets/ScreenShots/product.png)
+![Product Pay](assets/ScreenShots/product_pay.png)
+![Cart](assets/ScreenShots/cart.png)
+![Profile](assets/ScreenShots/profile.png)
 
 ### 🎯 Key Highlights
 
