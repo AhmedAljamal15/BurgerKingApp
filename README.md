@@ -12,21 +12,6 @@ It provides a smooth, visually appealing, and responsive ordering flow with supp
 - [Overview](#-overview)
 - [Features](#-features)
 - [Architecture](#-architecture)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Usage](#-usage)
-- [Theme System](#-theme-system)
-- [State Management](#-state-management)
-- [API Integration](#-api-integration)
-- [Testing](#-testing)
-- [Best Practices](#-best-practices)
-- [Contributing](#-contributing)
-- [Roadmap](#-roadmap)
-- [License & Support](#-license--support)
-
----
 
 ## 📝 Overview
 
@@ -89,12 +74,11 @@ The app follows a **Clean Architecture + Bloc pattern**, split into 3 main layer
    - Flutter UI (screens, widgets)
    - Bloc/Cubit for state management
 
-2. **Domain**
+2. **Repo**
    - Business logic
    - Entities and use cases
 
 3. **Data**
-   - Repositories implementations
    - API / local data sources
 
 
