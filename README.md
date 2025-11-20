@@ -9,34 +9,22 @@
 
 **A modern, feature-rich fast food ordering application built with Flutter**
 
-[Features](#-features) • [Screenshots](#-screenshots) • [Architecture](#-architecture) • [Installation](#-installation) • [Usage](#-usage) • [Contributing](#-contributing)
-
 </div>
-
----
-
-## 📋 Table of Contents
-
-- [Overview](#-overview)
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Usage](#-usage)
-- [Theme System](#-theme-system)
-- [State Management](#-state-management)
-- [API Integration](#-api-integration)
-- [Testing](#-testing)
-- [Contributing](#-contributing)
-- [License](#-license)
-
----
 
 ## 🌟 Overview
 
-**Fast Food App** is a comprehensive mobile application designed for seamless fast food ordering experiences. Built with Flutter and following clean architecture principles, this app provides an intuitive interface for browsing menus, customizing orders, managing carts, and tracking order history.
+**Fast Food App** is a comprehensive mobile application designed for seamless fast food ordering experiences. Built with Flutter and following clean architecture principles, this app provides an intuitive interface for browsing menus, customizing orders, managing carts, and tracking order history.   
+
+## 🌟 screensshots 
+
+![Login](screensshots/login.png)
+![Signup](screensshots/signup.png)
+![Home](screensshots/home.png)
+![Search](screensshots/search.png)
+![Product](screensshots/product.png)
+![Product Pay](screensshots/product_pay.png)
+![Cart](screensshots/cart.png)
+![Profile](screensshots/profile.png)
 
 ### 🎯 Key Highlights
 
