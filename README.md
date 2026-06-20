@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-# 🍔 Fast Food App - Flutter
+# 🍔 Burger King – Fast Food Ordering App
 
 <div align="center">
 
@@ -10,34 +9,22 @@
 
 **A modern, feature-rich fast food ordering application built with Flutter**
 
-[Features](#-features) • [Screenshots](#-screenshots) • [Architecture](#-architecture) • [Installation](#-installation) • [Usage](#-usage) • [Contributing](#-contributing)
-
 </div>
-
----
-
-## 📋 Table of Contents
-
-- [Overview](#-overview)
-- [Features](#-features)
-- [Architecture](#-architecture)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Installation](#-installation)
-- [Configuration](#-configuration)
-- [Usage](#-usage)
-- [Theme System](#-theme-system)
-- [State Management](#-state-management)
-- [API Integration](#-api-integration)
-- [Testing](#-testing)
-- [Contributing](#-contributing)
-- [License](#-license)
-
----
 
 ## 🌟 Overview
 
-**Fast Food App** is a comprehensive mobile application designed for seamless fast food ordering experiences. Built with Flutter and following clean architecture principles, this app provides an intuitive interface for browsing menus, customizing orders, managing carts, and tracking order history.
+**Fast Food App** is a comprehensive mobile application designed for seamless fast food ordering experiences. Built with Flutter and following clean architecture principles, this app provides an intuitive interface for browsing menus, customizing orders, managing carts, and tracking order history.   
+
+## 🌟 screensshots 
+
+![Login](assets/ScreenShots/login.png)
+![Signup](assets/ScreenShots/signup.png)
+![Home](assets/ScreenShots/home.png)
+![Search](assets/ScreenShots/search.png)
+![Product](assets/ScreenShots/product.png)
+![Product Pay](assets/ScreenShots/product_pay.png)
+![Cart](assets/ScreenShots/cart.png)
+![Profile](assets/ScreenShots/profile.png)
 
 ### 🎯 Key Highlights
 
@@ -417,173 +404,7 @@ cartBloc.add(ClearCart());
 | Surface    | Dark Teal       | `#142F2A` |
 | Text       | White           | `#FFFFFF` |
 
-### Using Theme Colors
 
-```dart
-// Theme-aware approach (recommended)
-Container(
-  color: Theme.of(context).primaryColor,
-  child: Text(
-    'Hello',
-    style: Theme.of(context).textTheme.bodyLarge,
-  ),
-)
-
-// Direct color reference
-import 'package:fast_food/core/theme/app_colors.dart';
-
-Container(
-  color: AppColors.primary,
-)
-
-// Conditional theming
-final isDark = Theme.of(context).brightness == Brightness.dark;
-color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary
-```
-
-### Theme Management with Bloc
-
-```dart
-// Toggle theme
-context.read<ThemeBloc>().add(ToggleTheme());
-
-// Set specific theme
-context.read<ThemeBloc>().add(SetTheme(ThemeMode.dark));
-
-// Listen to theme changes
-BlocBuilder<ThemeBloc, ThemeState>(
-  builder: (context, state) {
-    return MaterialApp(
-      themeMode: state.themeMode,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-    );
-  },
-)
-```
-
----
-
-## 🔄 State Management
-
-### Bloc Pattern
-
-This app uses **flutter_bloc** for predictable state management:
-
-```dart
-// 1. Define Events
-abstract class CartEvent {}
-class AddToCart extends CartEvent {
-  final Product product;
-  AddToCart(this.product);
-}
-
-// 2. Define States
-abstract class CartState {}
-class CartLoading extends CartState {}
-class CartLoaded extends CartState {
-  final List<CartItem> items;
-  CartLoaded(this.items);
-}
-
-// 3. Implement Bloc
-class CartBloc extends Bloc<CartEvent, CartState> {
-  CartBloc() : super(CartLoading()) {
-    on<AddToCart>(_onAddToCart);
-  }
-
-  void _onAddToCart(AddToCart event, Emitter<CartState> emit) {
-    // Business logic
-  }
-}
-
-// 4. Use in UI
-BlocBuilder<CartBloc, CartState>(
-  builder: (context, state) {
-    if (state is CartLoaded) {
-      return ListView.builder(
-        itemCount: state.items.length,
-        itemBuilder: (context, index) => CartItemWidget(state.items[index]),
-      );
-    }
-    return CircularProgressIndicator();
-  },
-)
-```
-
-### Hydrated Bloc (Persistence)
-
-```dart
-class CartBloc extends HydratedBloc<CartEvent, CartState> {
-  @override
-  CartState? fromJson(Map<String, dynamic> json) {
-    // Deserialize state
-    return CartLoaded.fromJson(json);
-  }
-
-  @override
-  Map<String, dynamic>? toJson(CartState state) {
-    // Serialize state
-    if (state is CartLoaded) {
-      return state.toJson();
-    }
-    return null;
-  }
-}
-```
-
----
-
-## 🌐 API Integration
-
-### Network Setup
-
-```dart
-// lib/core/network/api_client.dart
-class ApiClient {
-  final Dio _dio;
-
-  ApiClient() : _dio = Dio(BaseOptions(
-    baseUrl: ApiEndpoints.baseUrl,
-    connectTimeout: Duration(seconds: 30),
-    receiveTimeout: Duration(seconds: 30),
-  )) {
-    _dio.interceptors.add(LogInterceptor());
-    _dio.interceptors.add(AuthInterceptor());
-  }
-
-  Future<Response> get(String path) async {
-    return await _dio.get(path);
-  }
-
-  Future<Response> post(String path, dynamic data) async {
-    return await _dio.post(path, data: data);
-  }
-}
-```
-
-### Repository Pattern
-
-```dart
-class ProductRepository {
-  final ApiClient _apiClient;
-
-  ProductRepository(this._apiClient);
-
-  Future<List<Product>> getProducts() async {
-    try {
-      final response = await _apiClient.get(ApiEndpoints.products);
-      return (response.data as List)
-          .map((json) => Product.fromJson(json))
-          .toList();
-    } catch (e) {
-      throw Exception('Failed to load products: $e');
-    }
-  }
-}
-```
-
----
 
 ## 🧪 Testing
 
@@ -617,33 +438,6 @@ test/
     └── flows/
 ```
 
-### Example Test
-
-```dart
-void main() {
-  group('CartBloc', () {
-    late CartBloc cartBloc;
-
-    setUp(() {
-      cartBloc = CartBloc();
-    });
-
-    test('initial state is CartLoading', () {
-      expect(cartBloc.state, isA<CartLoading>());
-    });
-
-    blocTest<CartBloc, CartState>(
-      'emits CartLoaded when AddToCart is added',
-      build: () => cartBloc,
-      act: (bloc) => bloc.add(AddToCart(mockProduct)),
-      expect: () => [isA<CartLoaded>()],
-    );
-  });
-}
-```
-
----
-
 ## 🎯 Best Practices
 
 ### Code Style
@@ -668,27 +462,6 @@ void main() {
 - ✅ Ensure sufficient color contrast (WCAG AA)
 - ✅ Support screen readers
 - ✅ Test with TalkBack/VoiceOver
-
----
-
-## 🤝 Contributing
-
-We welcome contributions! Please follow these steps:
-
-1. **Fork the repository**
-2. **Create a feature branch**
-   ```bash
-   git checkout -b feature/amazing-feature
-   ```
-3. **Commit your changes**
-   ```bash
-   git commit -m 'Add amazing feature'
-   ```
-4. **Push to the branch**
-   ```bash
-   git push origin feature/amazing-feature
-   ```
-5. **Open a Pull Request**
 
 ### Contribution Guidelines
 
@@ -717,21 +490,6 @@ Additional documentation files:
 
 See [Issues](https://github.com/AhmedAljamal15/Burger_King/issues) for a complete list.
 
----
-
-## 🗺️ Roadmap
-
-- [ ] Push notifications for order updates
-- [ ] Social media authentication (Google, Facebook)
-- [ ] Loyalty points system
-- [ ] Multi-language support (i18n)
-- [ ] Voice ordering
-- [ ] AR menu preview
-- [ ] Apple Pay / Google Pay integration
-- [ ] Real-time order tracking map
-
----
-
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
@@ -756,106 +514,9 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## 📞 Support
-
-For support, please:
-
-- Open an [issue](https://github.com/AhmedAljamal15/Burger_King/issues)
-- Contact via GitHub discussions
-- Check existing documentation
-
----
 
 <div align="center">
 
-**Made with ❤️ using Flutter**
-
-⭐ Star this repo if you find it helpful!
 
 </div>
 =======
-# 🍔 Burger King – Fast Food Ordering App
-
-A modern **Flutter** fast food app inspired by Burger King’s experience.  
-It provides a smooth, visually appealing, and responsive ordering flow with support for dark/light themes, animations, and clean architecture.
-
-> ⚠️ Disclaimer: This app is a **non-official demo/learning project** and is **not affiliated** with Burger King Corporation.
-
----
-
-## 📚 Table of Contents
-
-- [Overview](#-overview)
-- [Features](#-features)
-- [Architecture](#-architecture)
-
-## 📝 Overview
-
-**Burger King App** is a Flutter-based fast food ordering application that focuses on:
-
-- Fast and intuitive **browsing** of meals and offers  
-- A smooth **shopping experience** with cart and checkout  
-- Aesthetic **glassmorphism UI** and animations  
-- A robust **Bloc-based architecture** that is scalable and maintainable  
-- Full support for **dark & light mode**
-
-This project is ideal as:
-
-- A portfolio piece for Flutter developers  
-- A base template for food ordering apps  
-- A playground to practice **Bloc, theming, and clean architecture**
-
----
-
-## ✅ Features
-
-### 🔐 Authentication
-- Email/password login & signup (or mock auth)
-- Optional **guest mode** for quick access
-- Basic validation and error handling
-
-### 🏠 Home & Product Discovery
-- Featured products & offers
-- Categories (e.g. Burgers, Sides, Drinks, Desserts)
-- Search and filter support (if implemented)
-
-### 🛍️ Shopping Experience
-- Product details with:
-  - Image
-  - Name, description
-  - Price
-  - Add-ons / options (e.g. extra cheese, bigger size)
-- Optional **3D previews** or animations (placeholder section if not implemented yet)
-
-### 🛒 Cart Management
-- Add / remove items
-- Update quantities
-- Show subtotal, tax, and total
-- Clear cart
-
-### 💳 Checkout & Order Tracking
-- Order summary screen
-- Simple checkout flow (mock or real API)
-- Order status/tracking placeholder
-
-### 🎨 UI & Animations
-- **Glassmorphism** elements (blurred cards, overlay panels)
-- Smooth page transitions & micro animations
-- Animated icons (e.g., theme toggle, cart, favorites)
-## 🧱 Architecture
-
-The app follows a **Clean Architecture + Bloc pattern**, split into 3 main layers:
-
-1. **Presentation**
-   - Flutter UI (screens, widgets)
-   - Bloc/Cubit for state management
-
-2. **Repo**
-   - Business logic
-   - Entities and use cases
-
-3. **Data**
-   - API / local data sources
-
-
->>>>>>> 68e7b7b44da3b596c2428c7a959d1caaaa417ba1
