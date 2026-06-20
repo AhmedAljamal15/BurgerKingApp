@@ -1,12 +1,11 @@
+import 'package:fast_food/features/auth/cubit/auth_cubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gap/gap.dart';
-
 import '../../../core/constants/app_colors.dart';
 import '../../../shared/custom_button.dart';
 import '../../../shared/custom_text.dart';
-import '../../auth/data/auth_repo.dart';
-import '../../auth/data/user_model.dart';
 import '../widgets/order_details_widget.dart';
 
 class CheckoutView extends StatefulWidget {
@@ -19,33 +18,29 @@ class CheckoutView extends StatefulWidget {
 }
 
 class _CheckoutViewState extends State<CheckoutView> {
+  // Pure UI state — acceptable to keep in the view
   String selectedMethod = 'Cash';
-  UserModel? userModel;
-  AuthRepo authRepo = AuthRepo();
-  bool isGuest = false;
-
-  Future<void> autoLogin() async {
-    final user = await authRepo.autoLogin();
-    if (mounted) return;
-    setState(() => isGuest = authRepo.isGuest);
-    if (user != null) setState(() => userModel = user);
-  }
-
-  @override
-  void initState() {
-    autoLogin();
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
+    // Read visa from the global AuthCubit — no local AuthRepo needed
+    final authState = context.watch<AuthCubit>().state;
+    String? visaNumber;
+    if (authState is AuthSuccess) visaNumber = authState.user.visa;
+    if (authState is AuthProfileUpdateSuccess) {
+      visaNumber = authState.user.visa;
+    }
+
+    final double subtotal = double.tryParse(widget.totalPricel) ?? 0.0;
+    final double total = subtotal + 3.50 + 40.33;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
         scrolledUnderElevation: 0.0,
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
-          child: Icon(Icons.arrow_back),
+          child: const Icon(Icons.arrow_back),
         ),
       ),
 
@@ -55,39 +50,38 @@ class _CheckoutViewState extends State<CheckoutView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText(
+              const CustomText(
                 text: 'Order summary',
                 size: 20,
                 weight: FontWeight.w500,
               ),
-              Gap(10),
+              const Gap(10),
               OrderDetailsWidget(
                 order: widget.totalPricel,
                 taxes: '3.50',
                 fees: '40.33',
-                total: (double.tryParse(widget.totalPricel)! + 3.50 + 40.33)
-                    .toStringAsFixed(2),
+                total: total.toStringAsFixed(2),
               ),
-              Gap(80),
-              CustomText(
+              const Gap(80),
+              const CustomText(
                 text: 'Payment methods',
                 size: 20,
                 weight: FontWeight.w500,
               ),
-              Gap(15),
+              const Gap(15),
 
               /// Cash
               ListTile(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                tileColor: Color(0xff3C2F2F),
-                contentPadding: EdgeInsets.symmetric(
+                tileColor: const Color(0xff3C2F2F),
+                contentPadding: const EdgeInsets.symmetric(
                   vertical: 8,
                   horizontal: 16,
                 ),
                 leading: Image.asset('assets/icon/cash.png', width: 50),
-                title: CustomText(
+                title: const CustomText(
                   text: 'Cash on Delivery',
                   color: Colors.white,
                 ),
@@ -99,52 +93,52 @@ class _CheckoutViewState extends State<CheckoutView> {
                 ),
                 onTap: () => setState(() => selectedMethod = 'Cash'),
               ),
-              Gap(10),
+              const Gap(10),
 
-              /// Debit
-              userModel?.visa == null
-                  ? Gap(0)
-                  : ListTile(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      tileColor: Colors.blue.shade900,
-                      contentPadding: EdgeInsets.symmetric(
-                        vertical: 2,
-                        horizontal: 16,
-                      ),
-                      leading: Icon(
-                        CupertinoIcons.creditcard,
-                        color: Colors.white,
-                      ),
-                      title: CustomText(
-                        text: 'Debit card',
-                        color: Colors.white,
-                      ),
-                      subtitle: CustomText(
-                        text: userModel?.visa ?? '**** ***** 2342',
-                        color: Colors.white,
-                      ),
-                      trailing: Radio<String>(
-                        activeColor: Colors.white,
-                        value: 'Visa',
-                        groupValue: selectedMethod,
-                        onChanged: (v) => setState(() => selectedMethod = v!),
-                      ),
-                      onTap: () => setState(() => selectedMethod = 'Visa'),
-                    ),
-              Gap(5),
+              /// Debit (only shown if user has a visa card)
+              if (visaNumber != null)
+                ListTile(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  tileColor: Colors.blue.shade900,
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 2,
+                    horizontal: 16,
+                  ),
+                  leading: const Icon(
+                    CupertinoIcons.creditcard,
+                    color: Colors.white,
+                  ),
+                  title: const CustomText(
+                    text: 'Debit card',
+                    color: Colors.white,
+                  ),
+                  subtitle: CustomText(
+                    text: visaNumber,
+                    color: Colors.white,
+                  ),
+                  trailing: Radio<String>(
+                    activeColor: Colors.white,
+                    value: 'Visa',
+                    groupValue: selectedMethod,
+                    onChanged: (v) => setState(() => selectedMethod = v!),
+                  ),
+                  onTap: () => setState(() => selectedMethod = 'Visa'),
+                ),
+              const Gap(5),
               Row(
                 children: [
                   Checkbox(
-                    activeColor: Color(0xffEF2A39),
+                    activeColor: const Color(0xffEF2A39),
                     value: true,
                     onChanged: (v) {},
                   ),
-                  CustomText(text: 'Save card details for future payments'),
+                  const CustomText(
+                      text: 'Save card details for future payments'),
                 ],
               ),
-              Gap(200),
+              const Gap(200),
             ],
           ),
         ),
@@ -168,7 +162,7 @@ class _CheckoutViewState extends State<CheckoutView> {
             BoxShadow(
               color: Colors.teal.shade800,
               blurRadius: 15,
-              offset: Offset(0, 0),
+              offset: const Offset(0, 0),
             ),
           ],
         ),
@@ -181,15 +175,13 @@ class _CheckoutViewState extends State<CheckoutView> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  CustomText(text: 'Total', size: 15),
+                  const CustomText(text: 'Total', size: 15),
                   CustomText(
-                    text: (double.tryParse(widget.totalPricel)! + 3.50 + 40.33)
-                        .toStringAsFixed(2),
+                    text: total.toStringAsFixed(2),
                     size: 20,
                   ),
                 ],
               ),
-
               CustomButton(
                 text: 'Pay Now',
                 onTap: () {
@@ -205,7 +197,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                           ),
                           child: Container(
                             width: 300,
-                            padding: EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12),
@@ -213,7 +205,7 @@ class _CheckoutViewState extends State<CheckoutView> {
                                 BoxShadow(
                                   color: Colors.grey.shade800,
                                   blurRadius: 15,
-                                  offset: Offset(0, 0),
+                                  offset: const Offset(0, 0),
                                 ),
                               ],
                             ),
@@ -223,34 +215,31 @@ class _CheckoutViewState extends State<CheckoutView> {
                                 CircleAvatar(
                                   radius: 40,
                                   backgroundColor: AppColors.primary,
-                                  child: Icon(
+                                  child: const Icon(
                                     CupertinoIcons.check_mark,
                                     color: Colors.white,
                                     size: 30,
                                   ),
                                 ),
-                                Gap(10),
+                                const Gap(10),
                                 CustomText(
                                   text: 'Success!',
                                   weight: FontWeight.bold,
                                   color: AppColors.primary,
                                   size: 20,
                                 ),
-                                Gap(3),
+                                const Gap(3),
                                 CustomText(
                                   text:
                                       'Your payment was successful. \nA receipt for this purchase \nhas been sent to your email.',
                                   color: Colors.grey.shade400,
                                   size: 11,
                                 ),
-
-                                Gap(10),
+                                const Gap(10),
                                 CustomButton(
                                   text: 'Close',
                                   width: 200,
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
+                                  onTap: () => Navigator.pop(context),
                                 ),
                               ],
                             ),

@@ -49,7 +49,7 @@ class AuthRepo {
       } else {
         throw ApiError(message: 'UnExpected Error From Server');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw ApiExceptions.handleError(e);
     } catch (e) {
       throw ApiError(message: e.toString());
@@ -89,7 +89,7 @@ class AuthRepo {
       } else {
         throw ApiError(message: 'UnExpected Error From Server');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw ApiExceptions.handleError(e);
     } catch (e) {
       throw ApiError(message: e.toString());
@@ -108,7 +108,7 @@ class AuthRepo {
       final user = UserModel.fromJson(response['data']);
       _currentUser = user;
       return user;
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw ApiExceptions.handleError(e);
     } catch (e) {
       throw ApiError(message: e.toString());
@@ -156,7 +156,7 @@ class AuthRepo {
       } else {
         throw ApiError(message: 'Invalid  Error from here');
       }
-    } on DioError catch (e) {
+    } on DioException catch (e) {
       throw ApiExceptions.handleError(e);
     } catch (e) {
       throw ApiError(message: e.toString());

@@ -40,6 +40,7 @@ class _CustomTxtfieldState extends State<CustomTxtfield> {
             return 'please fill ${widget.hint}';
           }
           null;
+          return null;
         },
         obscureText: _obscureText,
         decoration: InputDecoration(

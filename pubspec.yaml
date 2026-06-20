@@ -24,7 +24,7 @@ dependencies:
   lottie: ^3.3.2
   model_viewer_plus: ^1.9.3
   path_provider: ^2.1.5
-  provider: ^6.1.0
+  provider: ^6.1.5+1
   shared_preferences: ^2.5.3
   skeletonizer: ^2.1.0+1
   

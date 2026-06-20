@@ -1,8 +1,9 @@
 import 'package:fast_food/core/constants/app_colors.dart';
-import 'package:fast_food/features/auth/data/auth_repo.dart';
+import 'package:fast_food/features/auth/cubit/auth_cubit.dart';
 import 'package:fast_food/features/auth/views/login_view.dart';
 import 'package:fast_food/root.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
@@ -18,63 +19,23 @@ class _SplashViewState extends State<SplashView>
     with SingleTickerProviderStateMixin {
   double _opacity = 0.0;
 
-  // AuthRepo authRepo = AuthRepo();
-  // Future <void> _checkLogin () async {
-  //   try {
-  //     final user = await authRepo.autoLogin();
-  //     if (!mounted) return;
-
-  //     if(authRepo.isGuest) {
-  //       Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => Root()));
-  //     } else if (authRepo.isLoggedIn) {
-  //       Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => Root()));
-  //     } else {
-  //       Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => LoginView()));
-  //     }
-  //   } catch (e) {
-  //     debugPrint('Auto login failed: $e');
-  //     if (mounted) {
-  //       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const LoginView()));
-  //     }
-  //   }
-  // }
-
-  AuthRepo authRepo = AuthRepo();
-
   Future<void> _checkLogin() async {
-    try {
-      await authRepo.autoLogin();
-      if (!mounted) return;
+    // Use the global AuthCubit to determine login state
+    await context.read<AuthCubit>().autoLogin();
+    if (!mounted) return;
 
-      // If user is logged in (has valid account credentials)
-      if (authRepo.isLoggedIn) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (c) => Root()),
-        );
-      }
-      // If user selected guest mode
-      else if (authRepo.isGuest) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (c) => Root()),
-        );
-      }
-      // No login and no guest - go to login screen
-      else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (c) => LoginView()),
-        );
-      }
-    } catch (e) {
-      debugPrint('Auto login failed: $e');
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const LoginView()),
-        );
-      }
+    final authState = context.read<AuthCubit>().state;
+
+    if (authState is AuthSuccess || authState is AuthGuest) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (c) => const Root()),
+      );
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (c) => const LoginView()),
+      );
     }
   }
 
@@ -83,7 +44,9 @@ class _SplashViewState extends State<SplashView>
     super.initState();
     Future.delayed(
       const Duration(milliseconds: 300),
-      () => setState(() => _opacity = 1.0),
+      () {
+        if (mounted) setState(() => _opacity = 1.0);
+      },
     );
     Future.delayed(const Duration(seconds: 1), _checkLogin);
   }

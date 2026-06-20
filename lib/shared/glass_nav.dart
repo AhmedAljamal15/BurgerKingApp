@@ -9,11 +9,11 @@ class GlassBottomNavBar extends StatefulWidget {
   final List<BottomNavItemData> items;
 
   const GlassBottomNavBar({
-    Key? key,
+    super.key,
     required this.currentIndex,
     required this.onTap,
     required this.items,
-  }) : super(key: key);
+  });
 
   @override
   State<GlassBottomNavBar> createState() => _GlassBottomNavBarState();

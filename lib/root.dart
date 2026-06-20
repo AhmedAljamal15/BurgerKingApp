@@ -1,26 +1,25 @@
 import 'package:fast_food/features/cart/views/cart_view.dart';
+import 'package:fast_food/features/home/cubit/home_cubit.dart';
 import 'package:fast_food/features/orderHistory/views/order_history_view.dart';
 import 'package:fast_food/shared/custom_text.dart';
 import 'package:fast_food/shared/glass_nav.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'features/auth/views/profile_view.dart';
 import 'features/home/views/home_view.dart';
 
-
 class Root extends StatefulWidget {
-  const Root({super.key, });
-  
+  const Root({super.key});
+
   @override
   State<Root> createState() => _RootState();
 }
 
 class _RootState extends State<Root> with TickerProviderStateMixin {
-  // late PageController controller;
   late List<Widget> screens;
   int currentScreen = 0;
-
   late List<AnimationController> iconControllers;
 
   @override
@@ -28,18 +27,21 @@ class _RootState extends State<Root> with TickerProviderStateMixin {
     super.initState();
 
     screens = [
-      HomeView(),
-      CartView(),
-      OrderHistoryView(),
-      ProfileView(),
+      // HomeCubit is scoped to the home tab
+      BlocProvider(
+        create: (_) => HomeCubit(),
+        child: const HomeView(),
+      ),
+      const CartView(),
+      const OrderHistoryView(),
+      const ProfileView(),
     ];
 
-    // controller = PageController(initialPage: 0);
     iconControllers = List.generate(
       4,
-          (index) => AnimationController(
+      (index) => AnimationController(
         vsync: this,
-        duration: Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
       ),
     );
     iconControllers[currentScreen].forward();
@@ -47,23 +49,15 @@ class _RootState extends State<Root> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-   
-    for (var c in iconControllers) c.dispose();
+    for (var c in iconControllers) {
+      c.dispose();
+    }
     super.dispose();
   }
 
   void _onTabTapped(int index) {
     setState(() => currentScreen = index);
-    // controller.animateToPage(
-    //   index,
-    //   duration: Duration(milliseconds: 300),
-    //   curve: Curves.easeOutExpo,
-    // );
-
-    // Animate selected icon
     iconControllers[index].forward();
-
-    // Reverse others
     for (var i = 0; i < iconControllers.length; i++) {
       if (i != index) iconControllers[i].reverse();
     }
@@ -75,24 +69,17 @@ class _RootState extends State<Root> with TickerProviderStateMixin {
       canPop: false,
       child: Scaffold(
         extendBody: true,
-
-
-
         body: IndexedStack(
           index: currentScreen,
-
           children: screens,
         ),
-
-
-
         bottomNavigationBar: GlassBottomNavBar(
           currentIndex: currentScreen,
           onTap: _onTabTapped,
           items: [
             BottomNavItemData(
               label: 'Home',
-              icon: Icon(CupertinoIcons.home),
+              icon: const Icon(CupertinoIcons.home),
               filledIcon: AnimatedIcon(
                 icon: AnimatedIcons.menu_home,
                 progress: iconControllers[0],
@@ -100,9 +87,9 @@ class _RootState extends State<Root> with TickerProviderStateMixin {
             ),
             BottomNavItemData(
               label: 'Cart',
-              icon: Icon(CupertinoIcons.cart),
+              icon: const Icon(CupertinoIcons.cart),
               filledIcon: Badge(
-                label: CustomText(text: '1',size: 10),
+                label: const CustomText(text: '1', size: 10),
                 child: AnimatedIcon(
                   icon: AnimatedIcons.view_list,
                   progress: iconControllers[0],
@@ -111,12 +98,12 @@ class _RootState extends State<Root> with TickerProviderStateMixin {
             ),
             BottomNavItemData(
               label: 'History',
-              icon: Icon(Icons.table_bar_outlined),
-              filledIcon: Icon(Icons.table_bar),
+              icon: const Icon(Icons.table_bar_outlined),
+              filledIcon: const Icon(Icons.table_bar),
             ),
             BottomNavItemData(
               label: 'Profile',
-              icon: Icon(CupertinoIcons.person_alt_circle),
+              icon: const Icon(CupertinoIcons.person_alt_circle),
               filledIcon: AnimatedIcon(
                 size: 20,
                 icon: AnimatedIcons.arrow_menu,

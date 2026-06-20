@@ -30,7 +30,7 @@ class CartRepo {
       return GetCartResponse.fromJson(res);
     } catch (e) {
       if (e is ApiError) {
-        throw e;
+        rethrow;
       }
       throw ApiError(message: 'Failed to get cart: ${e.toString()}');
     }
